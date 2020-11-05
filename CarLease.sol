@@ -41,6 +41,10 @@ contract CarLease {
     
     }
     
+    function Time() public {
+        createTime = now;
+    }
+    
     function LeasePlan {
     
     }
