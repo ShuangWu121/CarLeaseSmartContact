@@ -3,10 +3,10 @@ pragma solidity ^0.7.0;
 
 contract CarLease {
     uint public value;
-    address payable public seller;
-    address payable public buyer;   
+    address payable public BilBoyd;
+    address payable public Customer;   
     
-     modifier onlyBilBoyd() { // Modifier
+    modifier onlyBilBoyd() { // Modifier
         require(
             msg.sender == BilBoyd,
             "Only car company BilBoyd can call this."
