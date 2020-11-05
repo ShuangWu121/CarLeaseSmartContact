@@ -6,7 +6,7 @@ contract CarLease {
     address payable public BilBoyd;
     struct public Customer { // Struct
         uint Experience;
-        uint MileGap;
+        uint MileCap;
         address payable public CustomerAccount;
         uint Duration;
     }
@@ -25,5 +25,8 @@ contract CarLease {
         //value = msg.value / 2;
         //require((2 * value) == msg.value, "Value has to be even.");
     }
-
+    
+    function LeasePlan {
+    
+    }
 }
