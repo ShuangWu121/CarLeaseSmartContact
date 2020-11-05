@@ -20,6 +20,14 @@ contract CarLease {
         _;
     }
     
+     modifier onlyCustomer() { // Modifier
+        require(
+            msg.sender == Customer.CustomerAccount,
+            "Only car Customer can call this."
+        );
+        _;
+    }
+    
     constructor() payable {
         BilBoyd = msg.sender;
         //value = msg.value / 2;
@@ -28,5 +36,8 @@ contract CarLease {
     
     function LeasePlan {
     
+    }
+    
+    function WeeklyPay {
     }
 }
