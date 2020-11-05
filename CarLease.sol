@@ -4,7 +4,13 @@ pragma solidity ^0.7.0;
 contract CarLease {
     uint public value;
     address payable public BilBoyd;
-    address payable public Customer;   
+    struct public Customer { // Struct
+        uint Experience;
+        uint MileGap;
+        address payable public CustomerAccount;
+        uint Duration;
+    }
+     
     
     modifier onlyBilBoyd() { // Modifier
         require(
