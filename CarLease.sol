@@ -10,6 +10,9 @@ contract CarLease {
         address payable public CustomerAccount;
         uint Duration;
     }
+    enum State { Created, Locked, Release, Inactive }
+    // The state variable has a default value of the first member, `State.created`
+    State public state;
      
     
     modifier onlyBilBoyd() { // Modifier
