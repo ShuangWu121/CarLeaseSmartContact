@@ -37,6 +37,10 @@ contract CarLease {
         //require((2 * value) == msg.value, "Value has to be even.");
     }
     
+    function Registeration {
+    
+    }
+    
     function LeasePlan {
     
     }
