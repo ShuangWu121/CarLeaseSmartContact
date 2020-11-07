@@ -4,12 +4,17 @@ pragma solidity ^0.7.0;
 contract CarLease {
     uint public value;
     address payable public BilBoyd;
-    struct public Customer { // Struct
+    address payable public Customer;
+    
+    
+    
+    struct CustomerCer { // Struct
         uint Experience;
         uint MileCap;
-        address payable public CustomerAccount;
-        uint Duration;
     }
+    
+    enum Plan {Plan1, Plan2}
+    Plan public Plan1;
     enum State { Created, Locked, Release, Inactive }
     // The state variable has a default value of the first member, `State.created`
     State public state;
@@ -25,7 +30,7 @@ contract CarLease {
     
      modifier onlyCustomer() { // Modifier
         require(
-            msg.sender == Customer.CustomerAccount,
+            msg.sender == Customer,
             "Only car Customer can call this."
         );
         _;
@@ -37,18 +42,31 @@ contract CarLease {
         //require((2 * value) == msg.value, "Value has to be even.");
     }
     
-    function Registeration {
+    
+    // Customer register 
+    /* 1. register customer certificate
+       2. choosePlan
+       3. Duration
+       4. StartDate
+    */
+    function Registeration() public {
     
     }
     
     function Time() public {
-        createTime = now;
+       // createTime = now;
     }
     
-    function LeasePlan {
-    
+    function ViewLeasePlan() public view returns(string memory,string memory) {
+        string memory Plan1="Plan 1 : WeeklyPay CarValue* 0.001";
+        string memory Plan2="Plan 2 : WeeklyPay CarValue*0.0001+Mile*30";
+      return (Plan1,Plan2);
     }
     
-    function WeeklyPay {
+    function ChoosePlan(uint8 n) public returns(Plan) {
+      return Plan1;
+    }
+    
+    function WeeklyPay() public {
     }
 }
