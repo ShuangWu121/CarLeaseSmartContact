@@ -79,8 +79,8 @@ contract CarLease {
     }
     
     function ViewLeasePlan() public view returns(string memory,string memory) {
-        string memory Plan1="Plan 1 : WeeklyPay CarValue* 0.001";
-        string memory Plan2="Plan 2 : WeeklyPay CarValue*0.0001+Mile*30";
+        string memory Deposit="Deposit = (CarValue+Mile)*0.15";
+        string memory WeeklyPay="WeeklyPay : (CarValue + Mile)/(ContractDuration * DriverExp * 7000)";
       return (Plan1,Plan2);
     }
     
