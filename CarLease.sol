@@ -8,19 +8,20 @@ contract CarLease {
     
     
     
+    enum Plan {Plan1, Plan2}
     struct Customer { // Struct
-        address payable  CustomerAddress;
-        uint Deposit;
+        address payable  customerAddress;
+        uint deposit;
         uint Experience;
         uint MileCap;
         uint Duration;
         uint CarValue;
+        uint WeeklyPay;
+        Plan ChoosenPlan;
     }
     
     Customer public customer;
-    
-    enum Plan {Plan1, Plan2}
-    Plan public Plan4;
+
     enum State { Created, Locked, Release, Inactive }
     // The state variable has a default value of the first member, `State.created`
     State public state;
@@ -57,22 +58,22 @@ contract CarLease {
        3. Duration
        4. StartDate
     */
-    function Registeration(uint8 carValue, Plan plan, uint experience, uint mileCap, uint duration) public payable {
+    function Registeration(uint8 carValue, Plan plan, uint experience, uint mileCap, uint contractDuration) public payable {
     
-        uint requredDeposit=2; //Formula for deposit goes here
+        uint requredDeposit=(carValue+mileCap)*15/100; //Formula for deposit goes here
         
         require(msg.value==requredDeposit, "Deposit not enough.");
         
         customer.Experience = experience;
         customer.MileCap = mileCap;
-        customer.Duration = duration;
+        customer.Duration = contractDuration;
         customer.CarValue = carValue;
-        customer.CustomerAddress = msg.sender;
-        customer.Deposit = msg.value;
+        customer.customerAddress = msg.sender;
+        customer.deposit = msg.value;
+        customer.ChoosenPlan = plan;
         
-        Plan4 = plan;
+        customer.WeeklyPay = (carValue + mileCap)/(contractDuration * experience * 7000);
     }
-   
     
     function Time() public {
        // createTime = now;
