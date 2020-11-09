@@ -9,8 +9,8 @@ contract CarLease {
     
     
     struct Customer { // Struct
-        address payable  customerAddress;
-        uint deposit;
+        address payable  CustomerAddress;
+        uint Deposit;
         uint Experience;
         uint MileCap;
         uint Duration;
@@ -57,11 +57,20 @@ contract CarLease {
        3. Duration
        4. StartDate
     */
-    function Registeration(uint8 car,uint8 Plan) public payable {
+    function Registeration(uint8 carValue, Plan plan, uint experience, uint mileCap, uint duration) public payable {
     
-    require(msg.value==20, "Deposit not enough.");
-    customer.customerAddress=msg.sender;
-    customer.deposit=msg.value;
+        uint requredDeposit=2; //Formula for deposit goes here
+        
+        require(msg.value==requredDeposit, "Deposit not enough.");
+        
+        customer.Experience = experience;
+        customer.MileCap = mileCap;
+        customer.Duration = duration;
+        customer.CarValue = carValue;
+        customer.CustomerAddress = msg.sender;
+        customer.Deposit = msg.value;
+        
+        Plan4 = plan;
     }
    
     
