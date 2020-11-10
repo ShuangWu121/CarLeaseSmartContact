@@ -4,25 +4,26 @@ pragma solidity ^0.7.0;
 contract CarLease {
     address payable public BilBoyd;
     
-    
-    
-    
-    
     enum Plan {Plan1, Plan2}
+    enum Termination {Terminate, BuyCar,Extend} 
     struct Customer { // Struct
-        address payable  customerAddress;
-        uint deposit;
+        address payable CustomerAddress;
+        uint Deposit;
         uint Experience;
         uint MileCap;
         uint Duration;
         uint CarValue;
         uint WeeklyPay;
         Plan ChoosenPlan;
+        uint StartTime;
+        uint Payments;
     }
     
     Customer public customer;
-
-    enum State { Created, Locked, Release, Inactive }
+    
+    
+    
+    enum State { Created, Active, Inactive }
     // The state variable has a default value of the first member, `State.created`
     State public state;
      
@@ -37,7 +38,7 @@ contract CarLease {
     
      modifier onlyCustomer() { // Modifier
         require(
-            msg.sender == customer.customerAddress,
+            msg.sender == customer.CustomerAddress,
             "Only car Customer can call this."
         );
         _;
@@ -45,8 +46,7 @@ contract CarLease {
     
     constructor() payable {
         BilBoyd = msg.sender;
-        //value = msg.value / 2;
-        //require((2 * value) == msg.value, "Value has to be even.");
+        state=State.Created;
     }
     
     
@@ -58,7 +58,8 @@ contract CarLease {
        3. Duration
        4. StartDate
     */
-    function Registeration(uint8 carValue, Plan plan, uint experience, uint mileCap, uint contractDuration) public payable {
+    function Registeration(uint8 carValue, Plan plan, uint experience, uint mileCap, uint contractDuration) 
+        public onlyBilBoyd payable {
     
         uint requredDeposit=(carValue+mileCap)*15/100; //Formula for deposit goes here
         
@@ -68,11 +69,14 @@ contract CarLease {
         customer.MileCap = mileCap;
         customer.Duration = contractDuration;
         customer.CarValue = carValue;
-        customer.customerAddress = msg.sender;
-        customer.deposit = msg.value;
+        customer.CustomerAddress = msg.sender;
+        customer.Deposit = msg.value;
         customer.ChoosenPlan = plan;
         
         customer.WeeklyPay = (carValue + mileCap)/(contractDuration * experience * 7000);
+        state = State.Active;
+        customer.StartTime = block.timestamp;
+        customer.Payments=0;
     }
     
     function Time() public {
@@ -80,15 +84,47 @@ contract CarLease {
     }
     
     function ViewLeasePlan() public view returns(string memory,string memory) {
-        string memory Deposit="Deposit = (CarValue+Mile)*0.15";
-        string memory WeeklyPay="WeeklyPay : (CarValue + Mile)/(ContractDuration * DriverExp * 7000)";
+        string memory Plan1="Plan 1 : WeeklyPay CarValue* 0.001";
+        string memory Plan2="Plan 2 : WeeklyPay CarValue*0.0001+Mile*30";
       return (Plan1,Plan2);
     }
     
     function ChoosePlan(uint8 n) public returns(Plan) {
-      return Plan4;
+      return customer.ChoosenPlan;
     }
     
-    function WeeklyPay() public {
+    function WeeklyPay() public onlyCustomer payable {
+        require(msg.value >= customer.WeeklyPay,"Its not enough");
+        
+        if(msg.value > customer.WeeklyPay)
+            customer.CustomerAddress.transfer(msg.value-customer.WeeklyPay);
+        customer.Payments += 1;
     }
+    
+    function CheckWeeklyPay() public onlyBilBoyd {
+        uint expectedPayments = (block.timestamp-customer.StartTime)/1 weeks; //Formula to get time since start of contract
+        if(expectedPayments -customer.Payments > 4)
+            customer.Payments += 1;//Remove. Only to fix compile error with if
+           
+            //TODO:
+            //terminate contract if deposit is empty
+        
+    }
+    
+    function TerminateContract() public onlyBilBoyd {
+        
+    }
+    
+    function TerminateContract(Termination termination) public onlyCustomer {
+        require(block.timestamp > customer.StartTime + customer.Duration);
+        if(termination==Termination.Extend)
+            customer.Payments += 1; //Remove. Only to fix compile error with if
+        else if(termination==Termination.BuyCar)
+            customer.Payments += 1; //Remove. Only to fix compile error with if
+        else if(termination==Termination.Terminate)
+            customer.Payments += 1; //Remove. Only to fix compile error with if
+        
+    }
+    
+    
 }
