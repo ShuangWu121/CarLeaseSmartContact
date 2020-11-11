@@ -118,11 +118,11 @@ contract CarLease {
     function TerminateContract(Termination termination) public onlyCustomer {
         require(block.timestamp > customer.StartTime + customer.Duration);
         if(termination==Termination.Extend)
-            customer.Payments += 1; //Remove. Only to fix compile error with if
+            customer.Payments = (carValue + mileCap)/(contractDuration * experience * 7000 * 2); // Recalculated weekly payment with 2 as loyalty parameter
         else if(termination==Termination.BuyCar)
-            customer.Payments += 1; //Remove. Only to fix compile error with if
+            customer.Payments = customer.CarValue - customer.Deposit; // payment should be eqaul to car value - paid deposit
         else if(termination==Termination.Terminate)
-            customer.Payments += 1; //Remove. Only to fix compile error with if
+            customer.Payments = selfdestruct(customer.CustomerAddress); //https://solidity-by-example.org/0.6/hacks/self-destruct/ example ıs here 
         
     }
     
