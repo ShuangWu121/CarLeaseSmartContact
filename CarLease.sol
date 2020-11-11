@@ -112,6 +112,9 @@ contract CarLease {
     }
     
     function TerminateContract() public onlyBilBoyd {
+        require(block.timestamp > customer.StartTime + customer.Duration);
+        if (termination==Termination.Terminate)
+            customer.Payments = selfdestruct(BilBoyd)
         
     }
     
