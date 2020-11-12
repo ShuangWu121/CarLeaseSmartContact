@@ -134,12 +134,11 @@ contract CarLease {
             return "Extend successfully"; 
             
         }   // Recalculated weekly payment with 2 as loyalty parameter
-        else if(termination==TerminationState.BuyCar)
+        else if(termination==TerminationState.BuyCar){
             customer.Payments = customer.CarValue - customer.Deposit; // payment should be eqaul to car value - paid deposit
+            return 'Bought successfully'
+        }
       //  else if(termination==TerminationState.Terminate)
          //   customer.Payments = selfdestruct(customer.CustomerAddress); //https://solidity-by-example.org/0.6/hacks/self-destruct/ example ıs here 
         
     }
-    
-    
-}
