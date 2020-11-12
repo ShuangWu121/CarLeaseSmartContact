@@ -65,7 +65,11 @@ contract CarLease {
     
         uint requredDeposit=(carValue+mileCap)*15/100; //Formula for deposit goes here
         
-        require(msg.value==requredDeposit, "Deposit not enough.");
+        require(msg.value>=requredDeposit, "Deposit not enough.");
+        
+        if(msg.value > requredDeposit)
+            customer.CustomerAddress.transfer(msg.value - requredDeposit);
+        customer.Payments += 1;
         
         customer.Experience = experience;
         customer.MileCap = mileCap;
@@ -92,6 +96,7 @@ contract CarLease {
     }
     
     function ChoosePlan(uint8 n) public returns(Plan) {
+    
       return customer.ChoosenPlan;
     }
     
@@ -122,10 +127,13 @@ contract CarLease {
 
     }
     
-    function TerminateChoice(TerminationState termination) public onlyCustomer {
+    function TerminateChoice(TerminationState termination) public onlyCustomer returns(string memory) {
         require(block.timestamp > customer.StartTime + customer.Duration);
-        if(termination==TerminationState.Extend)
-            customer.Payments = (customer.CarValue + customer.MileCap)/(customer.Duration * customer.Experience * 7000 * 2); // Recalculated weekly payment with 2 as loyalty parameter
+        if(termination==TerminationState.Extend){
+            customer.Payments = (customer.CarValue + customer.MileCap)/(customer.Duration * customer.Experience * 7000 * 2); 
+            return "Extend successfully"; 
+            
+        }   // Recalculated weekly payment with 2 as loyalty parameter
         else if(termination==TerminationState.BuyCar)
             customer.Payments = customer.CarValue - customer.Deposit; // payment should be eqaul to car value - paid deposit
       //  else if(termination==TerminationState.Terminate)
