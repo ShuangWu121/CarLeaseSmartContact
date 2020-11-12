@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.7.0;
 
+
 contract CarLease {
     address payable public BilBoyd;
     
@@ -24,6 +25,7 @@ contract CarLease {
     
     
     enum State { Created, Active, Inactive }
+    enum TerminationState {Extend,BuyCar,Terminate}
     // The state variable has a default value of the first member, `State.created`
     State public state;
      
@@ -111,22 +113,23 @@ contract CarLease {
         
     }
     
-    function TerminateContract() public onlyBilBoyd {
+    function TerminateContract(TerminationState termination) public onlyBilBoyd {
+        require(block.timestamp > customer.StartTime + customer.Duration);
         require(
             customer.Payments < (block.timestamp-customer.StartTime + 3)/1 weeks
         );
         selfdestruct(BilBoyd);
-        
+
     }
     
-    function TerminateContract(Termination termination) public onlyCustomer {
+    function TerminateChoice(TerminationState termination) public onlyCustomer {
         require(block.timestamp > customer.StartTime + customer.Duration);
-        if(termination==Termination.Extend)
-            customer.Payments = (carValue + mileCap)/(contractDuration * experience * 7000 * 2); // Recalculated weekly payment with 2 as loyalty parameter
-        else if(termination==Termination.BuyCar)
+        if(termination==TerminationState.Extend)
+            customer.Payments = (customer.CarValue + customer.MileCap)/(customer.Duration * customer.Experience * 7000 * 2); // Recalculated weekly payment with 2 as loyalty parameter
+        else if(termination==TerminationState.BuyCar)
             customer.Payments = customer.CarValue - customer.Deposit; // payment should be eqaul to car value - paid deposit
-        else if(termination==Termination.Terminate)
-            customer.Payments = selfdestruct(customer.CustomerAddress); //https://solidity-by-example.org/0.6/hacks/self-destruct/ example ıs here 
+      //  else if(termination==TerminationState.Terminate)
+         //   customer.Payments = selfdestruct(customer.CustomerAddress); //https://solidity-by-example.org/0.6/hacks/self-destruct/ example ıs here 
         
     }
     
