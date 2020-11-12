@@ -116,7 +116,7 @@ contract CarLease {
    
     
     function TerminateContract() public onlyBilBoyd {
-        require(block.timestamp > customer.StartTime + customer.Duration);
+        require(block.timestamp < customer.StartTime + customer.Duration);
         require(
             customer.Payments < (block.timestamp-customer.StartTime )/1 weeks +3
         );
